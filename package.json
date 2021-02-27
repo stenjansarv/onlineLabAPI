@@ -1,0 +1,44 @@
+{
+  "name": "onlinelabapi",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "directories": {
+    "lib": "lib",
+    "test": "tests"
+  },
+  "dependencies": {
+    "@elastic/elasticsearch": "^7.11.0",
+    "bodybuilder": "^2.4.0",
+    "joi": "^17.2.1",
+    "lodash": "^4.17.20",
+    "moment": "^2.29.1",
+    "node-fetch": "^2.6.1",
+    "serverless-cors-plugin": "^0.4.2",
+    "uuid": "^8.3.1"
+  },
+  "devDependencies": {
+    "install": "^0.13.0",
+    "jest": "^26.6.0",
+    "jest-junit": "^12.0.0",
+    "npm": "^7.5.4",
+    "serverless": "^2.8.0",
+    "serverless-offline": "^6.8.0",
+    "serverless-offline-ssm-provider": "^2.1.0"
+  },
+  "scripts": {
+    "test-elastic": "docker run --rm -p 9200:9200 -p 5601:5601 -e 'discovery.type=single-node' nshou/elasticsearch-kibana",
+    "run-tests": "export ELASTICSEARCH_HOST=localhost ELASTICSEARCH_PORT=9200 && npx jest --watchAll --runInBand --verbose",
+    "start": "serverless offline -o 0.0.0.0 --apiKey internal-use-only -s local"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/stenjansarv/onlineLabAPI.git"
+  },
+  "author": "Sten-Jan Sarv",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/stenjansarv/onlineLabAPI/issues"
+  },
+  "homepage": "https://github.com/stenjansarv/onlineLabAPI#readme"
+}

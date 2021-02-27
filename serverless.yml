@@ -1,0 +1,174 @@
+service: publications-service
+provider:
+  name: aws
+  runtime: nodejs12.x
+  region: eu-west-2
+  memorySize: 128
+  timeout: 30
+  environment:
+    ELASTICSEARCH_HOST: ${self:custom.elasticsearchHost}
+    ELASTICSEARCH_PORT: ${self:custom.elasticsearchPort}
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - logs:*
+      Resource:
+        - '*'
+    - Effect: Allow
+      Action:
+        - es:*
+      Resource:
+        - '*'
+
+  apiKeys:
+    - publications-key
+
+  tags:
+    Name: publications-service
+    Environment: prod
+    Owner: developers
+    Cluster: application
+    Role: functions
+    BusinessUnit: engineering
+    Clearance: developers
+
+package:
+  include:
+    - lib/**
+    - api/**
+  exclude:
+    - infra/**
+
+
+plugins:
+  - serverless-offline-ssm-provider
+  - serverless-offline
+
+custom:
+  elasticsearchHost: ${ssm:/Services/Publications/ElasticSearch/Host}
+  elasticsearchPort: ${ssm:/Services/Publications/ElasticSearch/Port}
+  serverless-offline-ssm-provider:
+    file: .ssm
+
+functions:
+  retrieve-publications:
+    handler: api/publications/get-all.handler
+    memorySize: 128
+    events:
+      - http:
+          path: '{publisherId}/publications/all'
+          method: get
+          request:
+            parameters:
+              paths:
+                publisherId: true
+  find-publications:
+    handler: api/publications/get.handler
+    memorySize: 128
+    events:
+      - http:
+          path: '{publisherId}/publications'
+          method: get
+          request:
+            parameters:
+              paths:
+                publisherId: true
+  upload-publications:
+    handler: api/publications/put.handler
+    memorySize: 128
+    events:
+      - http:
+          path: '{publisherId}/publications'
+          method: put
+          request:
+            parameters:
+              paths:
+                publisherId: true
+  get-publication:
+    handler: api/publications/publication/get.handler
+    memorySize: 128
+    events:
+      - http:
+          path: '{publisherId}/publications/{publicationId}'
+          method: get
+          request:
+            parameters:
+              paths:
+                publisherId: true
+                publicationId: true
+  put-publication:
+    handler: api/publications/publication/put.handler
+    memorySize: 128
+    events:
+      - http:
+          path: '{publisherId}/publications/{publicationId}'
+          method: put
+          request:
+            parameters:
+              paths:
+                publisherId: true
+                publicationId: true
+
+  retrieve-educations:
+    handler: api/educations/get-all.handler
+    memorySize: 128
+    events:
+      - http:
+          path: '{publisherId}/educations/all'
+          method: get
+          request:
+            parameters:
+              paths:
+                publisherId: true
+  upload-educations:
+    handler: api/educations/put.handler
+    memorySize: 128
+    events:
+      - http:
+          path: '{publisherId}/educations'
+          method: put
+          request:
+            parameters:
+              paths:
+                publisherId: true
+
+  retrieve-employments:
+    handler: api/employments/get-all.handler
+    memorySize: 128
+    events:
+      - http:
+          path: '{publisherId}/employments/all'
+          method: get
+          request:
+            parameters:
+              paths:
+                publisherId: true
+  upload-employments:
+    handler: api/employments/put.handler
+    memorySize: 128
+    events:
+      - http:
+          path: '{publisherId}/employments'
+          method: put
+          request:
+            parameters:
+              paths:
+                publisherId: true
+
+resources:
+  Resources:
+    InternalApiUri:
+      Type: AWS::SSM::Parameter
+      DependsOn:
+        - ApiGatewayRestApi
+      Properties:
+        Name: /Discovery/Publications/Api/Uri
+        Type: String
+        Value: 
+          !Join
+            - ''
+            - - "https://"
+              - !Ref ApiGatewayRestApi
+              - ".execute-api."
+              - !Ref AWS::Region
+              - ".amazonaws.com/dev"

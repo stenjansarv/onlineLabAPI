@@ -1,0 +1,27 @@
+{
+  "index_patterns": ["publisher-*-publications"],
+  "mappings": {
+    "dynamic_templates" : [
+      {
+        "string_fields" : {
+          "mapping" : {
+            "type" : "keyword"
+          },
+          "match_mapping_type" : "string",
+          "match" : "*"
+        }
+      }
+    ],
+    "properties" : {
+      "@timestamp" : { "type" : "date" },
+      "publication_id" : { "type" : "keyword" },
+      "title" : { "type" : "keyword" },
+      "subtitle" : { "type" : "keyword" },
+      "publication_date" : { "type" : "date" },
+      "last_modified_date" : { "type" : "date" },
+      "url" : { "type" : "keyword" },
+      "type" : { "type" : "keyword" },
+      "journal_title" : { "type" : "keyword" }
+    } 
+  }
+}

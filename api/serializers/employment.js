@@ -12,6 +12,7 @@ module.exports = (results) => {
       end_date: result._source.end_date,
       last_modified_date: result._source.last_modified_date,
       role_title: result._source.role_title,
+      department_name: result._source.department_name,
       organization_name: result._source.organization_name,
       organization_address: result._source.organization_address,
       organization_url: result._source.organization_url

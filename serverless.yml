@@ -21,10 +21,10 @@ provider:
         - '*'
 
   apiKeys:
-    - publications-key
+    - publisher-key
 
   tags:
-    Name: publications-service
+    Name: publisher-service
     Environment: prod
     Owner: developers
     Cluster: application
@@ -109,6 +109,11 @@ functions:
                 publisherId: true
                 publicationId: true
 
+
+###################
+###  EDUCATIONS
+###################
+
   retrieve-educations:
     handler: api/educations/get-all.handler
     memorySize: 128
@@ -131,6 +136,10 @@ functions:
             parameters:
               paths:
                 publisherId: true
+
+###################
+###  EMPLOYMENTS
+###################
 
   retrieve-employments:
     handler: api/employments/get-all.handler

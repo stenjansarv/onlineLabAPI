@@ -8,8 +8,6 @@ provider:
   environment:
     ELASTICSEARCH_HOST: ${self:custom.elasticsearchHost}
     ELASTICSEARCH_PORT: ${self:custom.elasticsearchPort}
-    ACCESS_KEY_ID: ${self:custom.accessKeyId}
-    SECRET_ACCESS_KEY: ${self:custom.secretAccessKey}
   iamRoleStatements:
     - Effect: Allow
       Action:
@@ -53,8 +51,6 @@ plugins:
 custom:
   elasticsearchHost: ${ssm:/Services/Publications/ElasticSearch/Host}
   elasticsearchPort: ${ssm:/Services/Publications/ElasticSearch/Port}
-  accessKeyId: ${ssm:/Secret/AccessKeyId~true}
-  secretAccessKey: ${ssm:/Secret/SecretAccessKey~true}
   serverless-offline-ssm-provider:
     file: .ssm
 

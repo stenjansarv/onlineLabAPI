@@ -8,6 +8,8 @@ provider:
   environment:
     ELASTICSEARCH_HOST: ${self:custom.elasticsearchHost}
     ELASTICSEARCH_PORT: ${self:custom.elasticsearchPort}
+    ACCESS_KEY_ID: ${self:custom.accessKeyId}
+    SECRET_ACCESS_KEY: ${self:custom.secretAccessKey}
   iamRoleStatements:
     - Effect: Allow
       Action:
@@ -19,6 +21,10 @@ provider:
         - es:*
       Resource:
         - '*'
+    - Effect: Allow
+      Action:
+        - ses:SendEmail
+      Resource: '*'
 
   apiKeys:
     - publisher-key
@@ -47,6 +53,8 @@ plugins:
 custom:
   elasticsearchHost: ${ssm:/Services/Publications/ElasticSearch/Host}
   elasticsearchPort: ${ssm:/Services/Publications/ElasticSearch/Port}
+  accessKeyId: ${ssm:/Secret/AccessKeyId~true}
+  secretAccessKey: ${ssm:/Secret/SecretAccessKey~true}
   serverless-offline-ssm-provider:
     file: .ssm
 
@@ -84,6 +92,17 @@ functions:
             parameters:
               paths:
                 publisherId: true
+  unload-publications:
+    handler: api/publications/delete-all.handler
+    memorySize: 128
+    events:
+      - http:
+          path: '{publisherId}/publications'
+          method: delete
+          request:
+            parameters:
+              paths:
+                publisherId: true
   get-publication:
     handler: api/publications/publication/get.handler
     memorySize: 128
@@ -108,12 +127,47 @@ functions:
               paths:
                 publisherId: true
                 publicationId: true
+  delete-publication:
+    handler: api/publications/publication/delete.handler
+    memorySize: 128
+    events:
+      - http:
+          path: '{publisherId}/publications/{publicationId}'
+          method: delete
+          request:
+            parameters:
+              paths:
+                publisherId: true
+                publicationId: true
 
 
 ###################
 ###  EDUCATIONS
 ###################
-
+  put-education:
+    handler: api/educations/education/put.handler
+    memorySize: 128
+    events:
+      - http:
+          path: '{publisherId}/educations/{educationId}'
+          method: put
+          request:
+            parameters:
+              paths:
+                publisherId: true
+                educationId: true
+  delete-education:
+    handler: api/educations/education/delete.handler
+    memorySize: 128
+    events:
+      - http:
+          path: '{publisherId}/educations/{educationId}'
+          method: delete
+          request:
+            parameters:
+              paths:
+                publisherId: true
+                educationId: true
   retrieve-educations:
     handler: api/educations/get-all.handler
     memorySize: 128
@@ -136,11 +190,45 @@ functions:
             parameters:
               paths:
                 publisherId: true
+  unload-educations:
+    handler: api/educations/delete-all.handler
+    memorySize: 128
+    events:
+      - http:
+          path: '{publisherId}/educations'
+          method: delete
+          request:
+            parameters:
+              paths:
+                publisherId: true
 
 ###################
 ###  EMPLOYMENTS
 ###################
-
+  put-employment:
+    handler: api/employments/employment/put.handler
+    memorySize: 128
+    events:
+      - http:
+          path: '{publisherId}/employments/{employmentId}'
+          method: put
+          request:
+            parameters:
+              paths:
+                publisherId: true
+                employmentId: true
+  delete-employment:
+    handler: api/employments/employment/delete.handler
+    memorySize: 128
+    events:
+      - http:
+          path: '{publisherId}/employments/{employmentId}'
+          method: delete
+          request:
+            parameters:
+              paths:
+                publisherId: true
+                employmentId: true
   retrieve-employments:
     handler: api/employments/get-all.handler
     memorySize: 128
@@ -163,6 +251,27 @@ functions:
             parameters:
               paths:
                 publisherId: true
+  unload-employments:
+    handler: api/employments/delete-all.handler
+    memorySize: 128
+    events:
+      - http:
+          path: '{publisherId}/employments'
+          method: delete
+          request:
+            parameters:
+              paths:
+                publisherId: true
+
+###################
+###  CONTACT
+###################
+  send:
+    handler: api/contact/send.handler
+    events:
+      - http:
+          path: 'email/send'
+          method: post
 
 resources:
   Resources:

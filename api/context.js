@@ -1,4 +1,4 @@
-const contextualize = require('../lib/context')
+const { contextualize } = require('../lib/context')
 
 module.exports = (event) => {
   const { publisherId, publicationId } = event.pathParameters

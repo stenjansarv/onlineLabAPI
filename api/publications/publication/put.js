@@ -24,9 +24,10 @@ exports.handler = async (event) => {
   const context = contextualize(event)
   const { payload, body } = extract(event, schema)
 
-  payload['publisher_id'] = context.publisherId
-  payload['publication_id'] = context.publicationId
-  payload['@timestamp'] = moment().valueOf()
+  if (body.title) payload['title'] = body.title
+  if (body.journal_title) payload['journal_title'] = body.journal_title
+  if (body.url) payload['url'] = body.url
+  payload['last_modified_date'] = moment().valueOf()
 
   const result = await putPublication(payload, context)
 

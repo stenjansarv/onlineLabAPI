@@ -1,7 +1,7 @@
 const moment = require('moment')
 const _ = require('lodash')
 const fetch = require('node-fetch')
-const contextualize = require('../context')
+const contextualize = require('../educationContext')
 const { success, invalid } = require('../respond')
 const serialize = require('../serializers/education')
 

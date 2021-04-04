@@ -259,16 +259,6 @@ functions:
               paths:
                 publisherId: true
 
-###################
-###  CONTACT
-###################
-  send:
-    handler: api/contact/send.handler
-    events:
-      - http:
-          path: 'email/send'
-          method: post
-
 resources:
   Resources:
     InternalApiUri:

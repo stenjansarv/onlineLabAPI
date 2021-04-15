@@ -135,6 +135,17 @@ functions:
               paths:
                 publisherId: true
                 publicationId: true
+  create-publication:
+    handler: api/publications/publication/post.handler
+    memorySize: 128
+    events:
+      - http:
+          path: '{publisherId}/publications'
+          method: post
+          request:
+            parameters:
+              paths:
+                publisherId: true
 
 
 ###################
